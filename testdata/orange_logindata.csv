@@ -1,0 +1,3 @@
+testName,username,password,expected
+Valid login,Admin,admin123,success
+Invalid login,Admin123,amin12,failure

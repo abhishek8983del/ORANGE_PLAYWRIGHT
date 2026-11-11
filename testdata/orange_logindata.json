@@ -1,0 +1,32 @@
+[
+    {
+        "testName": "Valid login",
+        "username": "Admin",
+        "password": "admin123",
+        "expected": "success"
+    },
+    {
+        "testName": "Invalid login",
+        "username": "Admn",
+        "password": "amin123",
+        "expected": "failure"
+    },
+    {
+        "testName": "Invalid login",
+        "username": "",
+        "password": "amin123",
+        "expected": "failure"
+    },
+    {
+        "testName": "Invalid login",
+        "username": "Admn",
+        "password": "",
+        "expected": "failure"
+    },
+    {
+        "testName": "Invalid login",
+        "username": "",
+        "password": "",
+        "expected": "failure"
+    }
+]
