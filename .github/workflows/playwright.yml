@@ -8,6 +8,10 @@ jobs:
   test:
     timeout-minutes: 30
     runs-on: ubuntu-24.04
+    env:
+      WEB_APP_URL: ${{ secrets.WEB_APP_URL }}
+      APP_USERNAME: ${{ secrets.APP_USERNAME }}
+      APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
