@@ -24,7 +24,7 @@ export const test = base.extend<PageFixtures>({
         await page.getByRole('button', { name: 'Login' }).click();
         await use(new LoginPage(page));
     },
-    dashboardPage: async ({ page }, use) => {
+    dashboardPage: async ({ page,loginPage:_loginPage }, use) => {
         await use(new DashboardPage(page));
     }
 });
