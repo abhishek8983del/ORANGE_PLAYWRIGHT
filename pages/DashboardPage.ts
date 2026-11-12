@@ -11,7 +11,8 @@ export class DashboardPage{
         this.inputSearch=page.getByPlaceholder('Search');
     }
     async isDashboardPageVisible():Promise<boolean>{
-         return await this.headingTitle.isVisible();
+        await this.headingTitle.waitFor({state:'visible'});
+        return await this.headingTitle.isVisible();
     }
 
     async searchMenuItem(searchItem:string):Promise<void>{
