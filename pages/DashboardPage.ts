@@ -12,7 +12,7 @@ export class DashboardPage{
         this.dashboardTitle=page.getByRole('heading',{name:'Dashboard'});
         this.inputSearch=page.getByPlaceholder('Search');
         this.searchedResult=page.locator('ul.oxd-main-menu li');
-        this.directoryTitle=page.getByRole('heading',{name:'Directory'});
+        this.directoryTitle=page.locator('h6',{hasText:'Directory'});
     }
     async isDashboardPageVisible():Promise<boolean>{
         await this.dashboardTitle.waitFor({state:'visible'});
