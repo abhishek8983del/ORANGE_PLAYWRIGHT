@@ -2,7 +2,7 @@ import { test as base } from '@playwright/test'
 import dotenv from 'dotenv'
 
 import { LoginPage } from '../pages/LoginPage';
-import { DashboardPage } from '../pages/dashboardPage';
+import { DashboardPage } from '../pages/DashboardPage';
 
 dotenv.config();
 
