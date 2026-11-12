@@ -6,8 +6,8 @@ test.describe('Products API Tests', () => {
     const PRODUCT_ID = 1;
 
     test('GET-All Products', async ({ request }) => {
-        console.log('base url is',BASE_URL);
         const response = await request.get(`${BASE_URL}${Routes.GET_ALL_PRODUCTS}`);
+        console.log(`${BASE_URL}${Routes.GET_ALL_PRODUCTS}`)
         expect(response.status()).toBe(200);
         const responseBody = await response.json();
         expect(responseBody.length).toBeGreaterThan(0);
