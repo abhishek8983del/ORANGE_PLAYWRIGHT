@@ -37,7 +37,6 @@ export default defineConfig({
     video:'retain-on-failure',
     headless:true,
     ignoreHTTPSErrors:true,
-    permissions:['geolocation'],
     
   },
 
