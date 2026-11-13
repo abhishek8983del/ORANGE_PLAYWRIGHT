@@ -6,6 +6,7 @@ export class DashboardPage{
     private inputSearch:Locator;
     private searchedResult:Locator;
     private directoryTitle:Locator;
+    private directoryMenuItem:Locator;
 
     constructor(page: Page){
         this.page=page;
@@ -13,6 +14,7 @@ export class DashboardPage{
         this.inputSearch=page.getByPlaceholder('Search');
         this.searchedResult=page.locator('ul.oxd-main-menu li');
         this.directoryTitle=page.locator('h6',{hasText:'Directory'});
+        this.directoryMenuItem=page.getByRole('link',{name:'Directory'})
     }
     async isDashboardPageVisible():Promise<boolean>{
         await this.dashboardTitle.waitFor({state:'visible'});
@@ -28,5 +30,8 @@ export class DashboardPage{
     async isDirectoryPageVisible():Promise<boolean>{
         await this.directoryTitle.waitFor({state:'visible'});
         return await this.directoryTitle.isVisible();
+    }
+    async clickOnDirectoryMenuItem():Promise<void>{
+        await this.directoryMenuItem.click();
     }
 }

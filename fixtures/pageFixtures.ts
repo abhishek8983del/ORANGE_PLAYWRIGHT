@@ -2,7 +2,8 @@ import { test as base } from '@playwright/test'
 import dotenv from 'dotenv'
 
 import { LoginPage } from '../pages/LoginPage';
-import { DashboardPage } from '../pages/DashboardPage';
+import {DashboardPage} from '../pages/DashboardPage';
+import { DirectoryPage } from '../pages/DirectoryPage';
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const APP_PASSWORD = process.env.APP_PASSWORD!;
 type PageFixtures = {
     loginPage: LoginPage;
     dashboardPage: DashboardPage;
+    directoryPage: DirectoryPage;
 };
 
 export const test = base.extend<PageFixtures>({
@@ -26,6 +28,9 @@ export const test = base.extend<PageFixtures>({
     },
     dashboardPage: async ({ page,loginPage:_loginPage }, use) => {
         await use(new DashboardPage(page));
+    },
+    directoryPage: async ({ page,dashboardPage:_dashboardPage }, use) => {
+        await use(new DirectoryPage(page));
     }
 });
 
