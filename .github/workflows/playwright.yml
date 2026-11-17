@@ -42,14 +42,22 @@ jobs:
       - name: Run Playwright Tests
         # run: npx playwright test tests/web --shard=${{ matrix.shard }}/3
         run: npx playwright test tests/web
-
-      - name: Upload Blob Report
+      
+      - name: Upload HTML Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: blob-report-${{ matrix.shard }}
-          path: blob-report
-          retention-days: 5
+          name: playwright-html-report
+          path: playwright-report
+          retention-days: 5  
+
+      # - name: Upload Blob Report
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: blob-report-${{ matrix.shard }}
+      #     path: blob-report
+      #     retention-days: 5
 
   # merge-reports:
   #   if: always()
