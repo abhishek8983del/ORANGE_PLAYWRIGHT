@@ -39,3 +39,26 @@ jobs:
           path: blob-report
           retention-days: 5
 
+  merge-reports:
+    if: always()
+    needs: test
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Download all blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+
+      - name: Verify downloaded files
+        run: ls -R all-blob-reports
+
+      - name: Merge Playwright reports
+        run: npx playwright merge-reports --reporter html all-blob-reports
+
+      - name: Upload merged HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: playwright-report
+          retention-days: 5
