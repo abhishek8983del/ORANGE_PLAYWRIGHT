@@ -2,7 +2,7 @@ import { test as base } from '@playwright/test'
 import dotenv from 'dotenv'
 
 import { LoginPage } from '../pages/LoginPage';
-import {DashboardPage} from '../pages/DashboardPage';
+import { DashboardPage } from '../pages/DashboardPage';
 import { DirectoryPage } from '../pages/DirectoryPage';
 
 dotenv.config();
@@ -26,10 +26,10 @@ export const test = base.extend<PageFixtures>({
         await page.getByRole('button', { name: 'Login' }).click();
         await use(new LoginPage(page));
     },
-    dashboardPage: async ({ page,loginPage:_loginPage }, use) => {
+    dashboardPage: async ({ page, loginPage: _loginPage }, use) => {
         await use(new DashboardPage(page));
     },
-    directoryPage: async ({ page,dashboardPage:_dashboardPage }, use) => {
+    directoryPage: async ({ page, dashboardPage: _dashboardPage }, use) => {
         await use(new DirectoryPage(page));
     }
 });
