@@ -8,12 +8,12 @@ jobs:
   test:
     timeout-minutes: 30
     runs-on: ubuntu-24.04
-    container:
-      image: mcr.microsoft.com/playwright:v1.65.0-noble
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3]
+    # container:
+    #   image: mcr.microsoft.com/playwright:v1.65.0-noble
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     shard: [1, 2, 3]
 
     env:
       WEB_APP_URL: ${{ secrets.WEB_APP_URL }}
@@ -30,13 +30,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Playwright Tests
-        run: npx playwright test tests/web --shard=${{ matrix.shard }}/3
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      - name: Verify blob report
-        run: |
-          echo "=== Blob Report Contents ==="
-          ls -R blob-report
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium  
+
+      - name: Run Playwright Tests
+        # run: npx playwright test tests/web --shard=${{ matrix.shard }}/3
+        run: npx playwright test tests/web
 
       - name: Upload Blob Report
         if: always()
@@ -46,28 +51,28 @@ jobs:
           path: blob-report
           retention-days: 5
 
-  merge-reports:
-    if: always()
-    needs: test
-    runs-on: ubuntu-24.04
+  # merge-reports:
+  #   if: always()
+  #   needs: test
+  #   runs-on: ubuntu-24.04
 
-    steps:
+  #   steps:
 
-      - name: Download all blob reports
-        uses: actions/download-artifact@v4
-        with:
-          path: all-blob-reports
-      - name: Collect blob zips
-        run: |
-            mkdir merged-reports
-            find all-blob-reports -name "*.zip" -exec cp {} merged-reports/ \;
+  #     - name: Download all blob reports
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         path: all-blob-reports
+  #     - name: Collect blob zips
+  #       run: |
+  #           mkdir merged-reports
+  #           find all-blob-reports -name "*.zip" -exec cp {} merged-reports/ \;
 
-      - name: Merge reports
-        run: npx playwright merge-reports --reporter html merged-reports    
+  #     - name: Merge reports
+  #       run: npx playwright merge-reports --reporter html merged-reports    
 
-      - name: Upload HTML Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-html-report
-          path: playwright-report
-          retention-days: 5
+  #     - name: Upload HTML Report
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: playwright-html-report
+  #         path: playwright-report
+  #         retention-days: 5
