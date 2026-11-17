@@ -20,6 +20,7 @@ jobs:
       WEB_APP_URL: ${{ secrets.WEB_APP_URL }}
       APP_USERNAME: ${{ secrets.APP_USERNAME }}
       APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+      PLAYWRIGHT_BROWSERS_PATH: .playwright-browsers
 
     steps:
       - uses: actions/checkout@v4
@@ -35,7 +36,7 @@ jobs:
         id: playwright-cache
         uses: actions/cache@v4
         with:
-          path: ~/.cache/ms-playwright
+          path: .playwright-browsers
           key: playwright-${{ runner.os }}-v1
           restore-keys: |
                 playwright-${{ runner.os }}-
