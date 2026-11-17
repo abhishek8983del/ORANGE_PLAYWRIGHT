@@ -43,8 +43,6 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium  
 
       - name: Run Playwright Tests
         # run: npx playwright test tests/web --shard=${{ matrix.shard }}/3
