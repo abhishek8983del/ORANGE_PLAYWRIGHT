@@ -59,21 +59,8 @@ jobs:
         with:
           path: all-blob-reports
 
-      - name: Show downloaded files
-        run: |
-          echo "=== Downloaded Artifacts ==="
-          find all-blob-reports -type f
-
-      - name: Collect blob zips
-        run: |
-          mkdir merged-reports
-          find all-blob-reports -name "*.zip" -exec cp {} merged-reports/ \;
-
-      - name: Verify merged input
-        run: ls -R merged-reports
-
       - name: Merge Playwright Reports
-        run: npx playwright merge-reports --reporter html merged-reports
+        run: npx playwright merge-reports --reporter html all-blob-reports
 
       - name: Upload HTML Report
         uses: actions/upload-artifact@v4
