@@ -1,41 +1,92 @@
 name: Playwright Tests
+
 on:
   pull_request:
-    branches: [ main ]
-  # push:
-  #   branches: [ main ]
- 
+    branches: [main]
+
 jobs:
   test:
     timeout-minutes: 30
     runs-on: ubuntu-24.04
+
     strategy:
       fail-fast: false
       matrix:
         shard: [1, 2, 3]
+
     env:
       WEB_APP_URL: ${{ secrets.WEB_APP_URL }}
       APP_USERNAME: ${{ secrets.APP_USERNAME }}
       APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
+      - uses: actions/checkout@v4
 
-    - name: Install Playwright Chromiun Browsers
-      run: npx playwright install --with-deps chromium
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
 
-    - name: Run Playwright tests
-      run: npx playwright test tests/web --shard=${{ matrix.shard }}/3
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Upload Blob Report
-      if: ${{ !cancelled() }}
-      uses: actions/upload-artifact@v4
-      with:
+      - name: Install Playwright Chromium Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright Tests
+        run: npx playwright test tests/web --shard=${{ matrix.shard }}/3
+
+      - name: Verify blob report
+        run: |
+          echo "=== Blob Report Contents ==="
+          ls -R blob-report
+
+      - name: Upload Blob Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
           name: blob-report-${{ matrix.shard }}
           path: blob-report
           retention-days: 5
 
+  merge-reports:
+    if: always()
+    needs: test
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download all blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+
+      - name: Show downloaded files
+        run: |
+          echo "=== Downloaded Artifacts ==="
+          find all-blob-reports -type f
+
+      - name: Collect blob zips
+        run: |
+          mkdir merged-reports
+          find all-blob-reports -name "*.zip" -exec cp {} merged-reports/ \;
+
+      - name: Verify merged input
+        run: ls -R merged-reports
+
+      - name: Merge Playwright Reports
+        run: npx playwright merge-reports --reporter html merged-reports
+
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: playwright-report
+          retention-days: 5
