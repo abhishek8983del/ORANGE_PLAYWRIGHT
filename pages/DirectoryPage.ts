@@ -2,7 +2,8 @@ import { Page, Locator } from '@playwright/test'
 
 export class DirectoryPage {
     private page: Page;
-    private titleDropdownList: Locator
+    private titleDropdownList: Locator;
+    private locationDropdownList:Locator;
     private listOptions: Locator;
     private searchButton: Locator;
     private recordStatus: Locator;
@@ -11,6 +12,7 @@ export class DirectoryPage {
     constructor(page: Page) {
         this.page = page;
         this.titleDropdownList = page.locator('.oxd-select-text-input').nth(0);
+        this.locationDropdownList=page.locator('.oxd-select-text-input').nth(1);
         this.listOptions = page.getByRole('listbox');
         this.searchButton = page.getByRole('button', { name: 'Search' });
         this.recordStatus = page.locator('span.oxd-text--span').filter({ hasText: 'Records Found' });
@@ -32,5 +34,21 @@ export class DirectoryPage {
 
         return expectedCount == actualCount
 
+    }
+
+    async searchByLocation(location:string):Promise<boolean>{
+        await this.locationDropdownList.click();
+        const option=this.listOptions.getByRole('option', { name: location });
+        await option.click();
+        await this.searchButton.click();
+         const result = await this.recordStatus.innerText();
+        const totalRecords = (text: string): number => {
+            const match = result.match(/\d+/);
+            return match ? Number(match[0]) : 0;
+        };
+        const expectedCount = totalRecords(result);
+        const actualCount = await this.recordList.locator('.oxd-grid-item').count();
+
+        return expectedCount == actualCount
     }
 }
