@@ -12,3 +12,14 @@ test('Search Directory by Job-Title',async({dashboardPage,directoryPage})=>{
     })
     
 })
+
+test('Search Directory by Location',async({dashboardPage,directoryPage})=>{
+    await test.step('Click on Directory Item',async()=>{
+        await dashboardPage.clickOnDirectoryMenuItem();
+        expect(await dashboardPage.isDirectoryPageVisible()).toBeTruthy();
+    });
+    await test.step('Select Location and click Search',async()=>{
+        const loc=await directoryPage.searchByLocation('Texas R&D');
+        expect(loc).toBeTruthy();
+    })
+})
