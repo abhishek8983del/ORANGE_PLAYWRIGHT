@@ -34,5 +34,7 @@ export async function loginAdmin(request: APIRequestContext) {
     );
 
     const body = await response.json();
-    return body.data.accessToken;
+    let token=await body.data.accessToken;
+    console.log(token);
+    return token;
 }
