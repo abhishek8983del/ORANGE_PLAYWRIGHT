@@ -21,6 +21,8 @@ jobs:
       APP_USERNAME: ${{ secrets.APP_USERNAME }}
       APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
       PLAYWRIGHT_BROWSERS_PATH: .playwright-browsers
+      API_AUTH_EMAIL: ${{ secrets.API_AUTH_EMAIL }}
+      API_AUTH_PASSWORD: ${{ secrets.API_AUTH_PASSWORD }}
 
     steps:
       - uses: actions/checkout@v4
