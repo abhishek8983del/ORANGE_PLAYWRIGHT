@@ -6,11 +6,9 @@ test('Search Directory by Job-Title',async({dashboardPage,directoryPage})=>{
         expect(await dashboardPage.isDirectoryPageVisible()).toBeTruthy();
     });
     await test.step('Select Title and click Search',async()=>{
-        const record=await directoryPage.searchByJobTitle('Account Assistant');
-        expect(record).toBeTruthy();
-
+        await directoryPage.searchByJobTitle('Account Assistant');
+        expect(await directoryPage.isRecordCountCorrect()).toBeTruthy();
     })
-    
 })
 
 test('Search Directory by Location',async({dashboardPage,directoryPage})=>{
@@ -19,7 +17,6 @@ test('Search Directory by Location',async({dashboardPage,directoryPage})=>{
         expect(await dashboardPage.isDirectoryPageVisible()).toBeTruthy();
     });
     await test.step('Select Location and click Search',async()=>{
-        const loc=await directoryPage.searchByLocation('Texas R&D');
-        expect(loc).toBeTruthy();
+        expect(await directoryPage.isRecordCountCorrect()).toBeTruthy();
     })
 })

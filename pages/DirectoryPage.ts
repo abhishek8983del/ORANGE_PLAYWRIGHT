@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test'
+import { Page, Locator } from '@playwright/test';
 
 export class DirectoryPage {
     private page: Page;
@@ -18,37 +18,24 @@ export class DirectoryPage {
         this.recordStatus = page.locator('span.oxd-text--span').filter({ hasText: 'Records Found' });
         this.recordList = page.locator('.oxd-grid-4');
     }
-
-    async searchByJobTitle(jobTitle: string): Promise<boolean> {
-        await this.titleDropdownList.click();
-        const option = this.listOptions.getByRole('option', { name: jobTitle });
-        await option.click();
+    private async selectAndSearch(dropdown: Locator,value: string): Promise<void> {
+        await dropdown.click();
+        await this.listOptions.getByRole('option', { name: value, exact: true }).click();
         await this.searchButton.click();
+    }
+    async isRecordCountCorrect(): Promise<boolean> {
         const result = await this.recordStatus.innerText();
-        const totalRecords = (text: string): number => {
-            const match = result.match(/\d+/);
-            return match ? Number(match[0]) : 0;
-        };
-        const expectedCount = totalRecords(result);
-        const actualCount = await this.recordList.locator('.oxd-grid-item').count();
+        const match = result.match(/\d+/);
+        const expectedCount = match ? Number(match[0]) : 0;
+        const actualCount =await this.recordList.locator('.oxd-grid-item').count();
+        return expectedCount === actualCount;
+}
 
-        return expectedCount == actualCount
-
+    async searchByJobTitle(jobTitle: string): Promise<void> {
+        await this.selectAndSearch(this.titleDropdownList, jobTitle);
     }
 
-    async searchByLocation(location:string):Promise<boolean>{
-        await this.locationDropdownList.click();
-        const option=this.listOptions.getByRole('option', { name: location });
-        await option.click();
-        await this.searchButton.click();
-         const result = await this.recordStatus.innerText();
-        const totalRecords = (text: string): number => {
-            const match = result.match(/\d+/);
-            return match ? Number(match[0]) : 0;
-        };
-        const expectedCount = totalRecords(result);
-        const actualCount = await this.recordList.locator('.oxd-grid-item').count();
-
-        return expectedCount == actualCount
+    async searchByLocation(location:string):Promise<void>{
+        await this.selectAndSearch(this.locationDropdownList, location);
     }
 }
